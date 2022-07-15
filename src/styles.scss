@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+$background: #303030;
+
+html, body { height: 100%; }
+body {  
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    height: 100vh;
+    width: 100vw;
+    background-color: $background ;
+}
+
+.form-field-container{
+    width: 100%;
+}
