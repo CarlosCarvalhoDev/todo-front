@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { MatDialog } from '@angular/material/dialog';
 import { tap } from 'rxjs/operators';
 import { TodoDialogComponent } from '../components/todo-dialog/todo-dialog.component';
-import { TodoChangeUserDto, TodoSumary, TodoUser } from './interfaces/todo.interface';
+import { TodoChangeUserDto, TodoSumary, TodosUsersResponseViewModel } from './interfaces/todo.interface';
 import { AddUserDialogComponent } from '../components/add-user-dialog/add-user-dialog.component';
 import { TodoService } from '../services/todo.service';
 import { catchError, delay, fromEvent, map, Observable, ObservedValueOf, of, takeUntil } from 'rxjs';
@@ -18,7 +18,7 @@ import { UserService } from '../services/user.service';
   styleUrls: ['./todo.component.scss']
 })
 export class TodoComponent implements OnInit {
-  todosByUser: TodoUser[] = [];
+  todosByUser: TodosUsersResponseViewModel[] = [];
 
   constructor(
     private _dialog: MatDialog, 
@@ -46,11 +46,10 @@ export class TodoComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<TodoSumary[]>, userId: string) {
+    console.log(event);
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.UpdateOrderTodo();
     } 
-    
     else {
       transferArrayItem(
         event.previousContainer.data,
@@ -64,13 +63,9 @@ export class TodoComponent implements OnInit {
     }
   }
 
-  UpdateOrderTodo(){
-
-  }
 
   UpdateTodo(todoId: string, userId: string){
     const param = {
-      id: todoId,
       userId: userId
     } as TodoChangeUserDto
     this._todoService.ChangeTodoUser(todoId, param)

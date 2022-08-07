@@ -50,12 +50,11 @@ export class AddTodoDialogComponent implements OnInit {
     const formValue = {
       ...this.addTodoForm.value as TodoDto
     }
-
     this.todoData = formValue;
 
     this._todoService.CreateTodo(this.todoData)
       .pipe(
-        map( todo => {
+        map( () => {
           this.openSnackBar('Todo is Created');
           this.dialogRef.close(true);
         }),

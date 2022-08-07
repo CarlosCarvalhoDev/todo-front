@@ -4,30 +4,21 @@
           <div>
             <mat-form-field class="form-field-container" appearance="outline">
               <mat-label>Name</mat-label>
-              <input matInput 
-              (ngModelChange)="this.addUserForm.value.name" 
-              formControlName="name"
-              #name>
+              <input matInput formControlName="name">
             </mat-form-field>  
           </div>  
 
           <div>
             <mat-form-field class="form-field-container" appearance="outline">
               <mat-label>Email</mat-label>
-              <input matInput
-              (ngModelChange)="this.addUserForm.value.email" 
-              formControlName="email"
-              #email>
+              <input matInput formControlName="email">
             </mat-form-field>  
           </div>
 
           <div>
             <mat-form-field class="form-field-container" appearance="outline">
               <mat-label>Password</mat-label>
-              <input matInput
-              (ngModelChange)="this.addUserForm.value.password" 
-              formControlName="password"
-              #password>
+              <input matInput formControlName="password">
             </mat-form-field>  
           </div>
         </div>

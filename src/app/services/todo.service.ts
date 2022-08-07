@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import {  Todo, TodoChangeUserDto, TodoDto, TodoUser, UpdateTodoDTO } from '../todo/interfaces/todo.interface';
+import {  Todo, TodoChangeUserDto, TodoDto, TodosUsersResponseViewModel, UpdateTodoDTO } from '../todo/interfaces/todo.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +18,8 @@ export class TodoService {
 
   constructor(public _http: HttpClient) { }
 
-  public GetTodoByUser(): Observable<TodoUser[]>{
-    return this._http.get<TodoUser[]>(this.url + '/todobyuser')
+  public GetTodoByUser(): Observable<TodosUsersResponseViewModel[]>{
+    return this._http.get<TodosUsersResponseViewModel[]>(this.url + '/todobyuser')
       .pipe(
         catchError(this.handleError)
       );
