@@ -17,45 +17,41 @@
         <mat-icon>add</mat-icon>
         <span>New User</span>
       </button>
-      
     </mat-menu>
-      
 </mat-toolbar>
 
 <main cdkDropListGroup>
   <div class="user-container" #user *ngFor="let user of todosByUser; let i = index">
     <div class="user-container-header">
-        <h1>{{ user.userName | uppercase }}</h1>
-        <a mat-icon-button [matMenuTriggerFor]="newUserOptions" aria-label="More Options">
-          <mat-icon>more_vert</mat-icon>
-        </a>
-        <mat-menu #newUserOptions="matMenu">
-          <button mat-menu-item (click)="openAddTodoDialog(user.userId)">
-            <mat-icon>add</mat-icon>
-            <span>Add New Todo</span>
-          </button>
-          <button mat-menu-item (click)="removeUser(user.userId)">
-            <mat-icon>delete</mat-icon>
-            <span>Remove User</span>
-          </button>
-        </mat-menu>
-
+      <h1>{{ user.userName | uppercase }}</h1>
+      <a mat-icon-button [matMenuTriggerFor]="newUserOptions" aria-label="More Options">
+        <mat-icon>more_vert</mat-icon>
+      </a>
+      <mat-menu #newUserOptions="matMenu">
+        <button mat-menu-item (click)="openAddTodoDialog(user.userId)">
+          <mat-icon>add</mat-icon>
+          <span>Add New Todo</span>
+        </button>
+        <button mat-menu-item (click)="removeUser(user.userId)">
+          <mat-icon>delete</mat-icon>
+          <span>Remove User</span>
+        </button>
+      </mat-menu>
     </div>
-    <div
-        cdkDropList
-        class="cdk-list"
-        #todoList="cdkDropList"
-        [cdkDropListData]="user.todoList"
-        (cdkDropListDropped)="drop($event, user.userId)">
-        <div 
-            cdkDrag
-            class="cdk-box"
-            *ngFor="let todo of user.todoList" 
-            (click)="openTodoDialog(todo.id)"
-            #todoBox>
-            <span>{{ todo.title }}</span>
-            <div (click)="deleteTodo(todo.id); $event.stopPropagation()" class="completed-indicator"><mat-icon>delete</mat-icon></div>
+
+    <div cdkDropList class="cdk-list"
+      #todoList="cdkDropList"
+      [cdkDropListData]="user.todoList"
+      (cdkDropListDropped)="drop($event, user.userId)">
+
+      <div cdkDrag class="cdk-box"
+        *ngFor="let todo of user.todoList" 
+        (click)="openTodoDialog(todo.id)" #todoBox>
+        <span>{{ todo.title }}</span>
+        <div (click)="deleteTodo(todo.id); $event.stopPropagation()" class="completed-indicator">
+          <mat-icon>delete</mat-icon>
         </div>
+      </div>
     </div>
   </div>   
 </main>

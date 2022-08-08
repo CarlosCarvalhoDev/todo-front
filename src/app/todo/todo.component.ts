@@ -11,6 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddTodoDialogComponent } from '../components/add-todo-dialog/add-todo-dialog.component';
 import { UserService } from '../services/user.service';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-todo',
@@ -24,7 +25,8 @@ export class TodoComponent implements OnInit {
     private _dialog: MatDialog, 
     private _todoService: TodoService, 
     private _snackBar: MatSnackBar,
-    private _userService: UserService 
+    private _userService: UserService,
+    private _notificationService: NotificationService 
     ) { }
 
   ngOnInit(): void {
@@ -38,7 +40,7 @@ export class TodoComponent implements OnInit {
         this.todosByUser = todo;
       }),
       catchError((error: HttpErrorResponse) => {
-        this.openSnackBar(error.message)
+        this._notificationService.error({message: error.message});
         return of(0);
       })
     )
@@ -48,9 +50,7 @@ export class TodoComponent implements OnInit {
   drop(event: CdkDragDrop<TodoSumary[]>, userId: string) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.UpdateOrderTodo();
     } 
-    
     else {
       transferArrayItem(
         event.previousContainer.data,
@@ -58,14 +58,9 @@ export class TodoComponent implements OnInit {
         event.previousIndex,
         event.currentIndex,
       );
-      
       var todoId = event.container.data[0].id;
       this.UpdateTodo(todoId, userId);
     }
-  }
-
-  UpdateOrderTodo(){
-
   }
 
   UpdateTodo(todoId: string, userId: string){
@@ -73,10 +68,11 @@ export class TodoComponent implements OnInit {
       id: todoId,
       userId: userId
     } as TodoChangeUserDto
+
     this._todoService.ChangeTodoUser(todoId, param)
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        this.openSnackBar(error.message)
+        this._notificationService.error({message: error.message})
         return of(0);
       })
     )
@@ -85,20 +81,33 @@ export class TodoComponent implements OnInit {
         this.RefreshDataTodo();
         return;
       }
-      this.openSnackBar("Falha ao atualizar");
     });
   }
-
-
 
   deleteTodo(todoId: string){
     this._todoService.DeleteTodo(todoId)
     .pipe(
-      map( result => {
+      map( () => {
         this.RefreshDataTodo();
+        this._notificationService.success({message: 'Todo has been successfully deleted'});
       }),
       catchError((error: HttpErrorResponse) => {
-        this.openSnackBar(error.message)
+        this._notificationService.error({message: error.message});
+        return of(0);
+      })
+    )
+    .subscribe();
+  }
+
+  removeUser(userId: string){
+    this._userService.DeleteUser(userId)
+    .pipe(
+      map( () => {
+        this.RefreshDataTodo();
+        this._notificationService.success({message: 'User has been successfully deleted'})
+      }),
+      catchError((error: HttpErrorResponse) => {
+        this._notificationService.error({message: error.message});
         return of(0);
       })
     )
@@ -116,19 +125,6 @@ export class TodoComponent implements OnInit {
         }
       }
     )
-  }
-  removeUser(userId: string){
-    this._userService.DeleteUser(userId)
-    .pipe(
-      map( result => {
-        this.RefreshDataTodo();
-      }),
-      catchError((error: HttpErrorResponse) => {
-        this.openSnackBar(error.message)
-        return of(0);
-      })
-    )
-    .subscribe();
   }
 
   openTodoDialog(id: string) {
@@ -158,13 +154,5 @@ export class TodoComponent implements OnInit {
       }
     )
   }
-
-  openSnackBar(message: string) {
-    this._snackBar.open(  message, 'Close', {
-      horizontalPosition: 'right',
-      verticalPosition: 'bottom',
-    });
-  }
-
 }
 

@@ -1,33 +1,19 @@
 <h1>ADD TODO DIALOG</h1>
 <form [formGroup]="addTodoForm">
   <div mat-dialog-content>
-    
-    <div>
     <mat-form-field class="form-field-container" appearance="outline">
         <mat-label>Title</mat-label>
-        <input matInput
-        (ngModelChange)="this.addTodoForm.value.title" 
-        formControlName="title"
-        #title>
+        <input matInput formControlName="title">
     </mat-form-field>  
-    </div>
 
-    <div>
-      <mat-form-field class="form-field-container" appearance="outline">
-        <mat-label>Description</mat-label>
-        <input matInput 
-        (ngModelChange)="this.addTodoForm.value.description" 
-        formControlName="description"
-        #description>
-      </mat-form-field>  
-    </div>  
-
-    
+    <mat-form-field class="form-field-container" appearance="outline">
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="description">
+    </mat-form-field>  
   </div>
 
   <div mat-dialog-actions [align]="'end'">
     <button mat-button mat-dialog-close>Cancel</button>
     <button color="accent" mat-button cdkFocusInitial (click)="onSubmit()">Submit</button>
   </div>
-
 </form>

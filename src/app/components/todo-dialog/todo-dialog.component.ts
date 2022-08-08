@@ -6,6 +6,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { FloatLabelType } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, map, of } from 'rxjs';
+import { NotificationService } from 'src/app/services/notification.service';
 import { TaskService } from 'src/app/services/task.service';
 import { TodoService } from 'src/app/services/todo.service';
 
@@ -41,7 +42,7 @@ export class TodoDialogComponent{
   constructor( 
     @Inject(DIALOG_DATA) public data: string, 
     private _fb: FormBuilder,
-    private _snackBar: MatSnackBar,
+    private _notificationService: NotificationService,
     private _todoService: TodoService,
     private _taskService: TaskService,
     public dialogRef: MatDialogRef<TodoDialogComponent>
@@ -55,29 +56,28 @@ export class TodoDialogComponent{
   }
 
   refreshTodoDetailsData(todoId: string){
-    this._todoService
-      .GetTodoDetails(todoId)
+    this._todoService.GetTodoDetails(todoId)
       .pipe(
         map(todoDetails => { 
           this.todo = todoDetails;
-          this.initiTodoForm(todoDetails); 
+          this.initiTodoForm(todoDetails);
         }),
         catchError((error: HttpErrorResponse) => {
-          this.openSnackBar(error.message)
+          this._notificationService.error({message: error.message});
           return of(0);
         })
       )
       .subscribe();
   }
+
   async onChangeTask({id, isCompleted}: TaskModel){
-    
     this._taskService.UpdateStatus({
       taskId: id,
       isCompleted: isCompleted
     })
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        this.openSnackBar(error.message)
+        this._notificationService.error({message: error.message});
         return of(0);
       })
     )
@@ -123,12 +123,12 @@ export class TodoDialogComponent{
     this._todoService.Update(todoId, param)
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        this.openSnackBar(error.message)
+        this._notificationService.error({message: error.message});
         return of(0);
       })
     )
     .subscribe( () => {
-        this.openSnackBar("Todo Atualizado com sucesso");
+      this._notificationService.success({message: 'Todo has been updated successfully'});
         this.dialogRef.close(true);
       }
     );
@@ -152,10 +152,7 @@ export class TodoDialogComponent{
 
   submitTask(todoId: string){
     if(!this.taskForm.valid){
-      this._snackBar.open(  'Existem campos obrigatórios nao preenchidos.', 'Close', {
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      });
+      this._notificationService.message({message: 'Fill in all mandatory fields' })
       return;     
     }
     
@@ -164,16 +161,16 @@ export class TodoDialogComponent{
       taskTitle: this.taskForm.controls['title'].value
     } as TaskDto
 
-    this._taskService
-      .CreateTask(taskData)
+    this._taskService.CreateTask(taskData)
       .pipe(
-        map(task => { 
+        map( () => { 
           this.refreshTodoDetailsData(this.todo.id);
           this.hideTaskField = false;
+          this._notificationService.success({message: 'Task was created successfully'});
 
         }),
         catchError((error: HttpErrorResponse) => {
-          this.openSnackBar(error.message)
+          this._notificationService.error({message: error.message});
           return of(0);
         })
       )
@@ -187,11 +184,12 @@ export class TodoDialogComponent{
   onClickDeleteTask(taskId: string){
     this._taskService.DeleteTask(taskId)
     .pipe(
-      map( result => {
+      map(() => {
         this.refreshTodoDetailsData(this.todo.id);
+        this._notificationService.success({message: 'Task was successfully deleted'});
       }),
       catchError((error: HttpErrorResponse) => {
-        this.openSnackBar(error.message)
+        this._notificationService.error({message: error.message});
         return of(0);
       })
     )
@@ -199,13 +197,6 @@ export class TodoDialogComponent{
   }
 
   //COMPLEMENTARY METHODS
-  openSnackBar(message: string) {
-    this._snackBar.open(message, 'Close', {
-      horizontalPosition: 'right',
-      verticalPosition: 'bottom',
-    });
-  }
-
   hasTasks(): boolean {
     if (this.todo === null) return false;
     if (this.todo === undefined) return false;

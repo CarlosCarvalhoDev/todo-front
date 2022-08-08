@@ -22,6 +22,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { AddTodoDialogComponent } from '../components/add-todo-dialog/add-todo-dialog.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { TaskService } from '../services/task.service';
+import { NotificationService } from '../services/notification.service';
 
 
 
@@ -60,6 +61,7 @@ import { TaskService } from '../services/task.service';
     UserService,
     TodoService,
     TaskService,
+    NotificationService
   ]
 })
 export class TodoModule { }
