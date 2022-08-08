@@ -1,6 +1,7 @@
-<h1>ADD TODO DIALOG</h1>
-<form [formGroup]="addTodoForm">
-  <div mat-dialog-content>
+<div mat-dialog-title>ADD TODO DIALOG</div>
+
+<div mat-dialog-content>
+  <form [formGroup]="addTodoForm">
     <mat-form-field class="form-field-container" appearance="outline">
         <mat-label>Title</mat-label>
         <input matInput formControlName="title">
@@ -10,10 +11,10 @@
       <mat-label>Description</mat-label>
       <input matInput formControlName="description">
     </mat-form-field>  
-  </div>
+  </form>
+</div>
 
-  <div mat-dialog-actions [align]="'end'">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button color="accent" mat-button cdkFocusInitial (click)="onSubmit()">Submit</button>
-  </div>
-</form>
+<div mat-dialog-actions [align]="'end'">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button color="accent" mat-button cdkFocusInitial (click)="onSubmit()">Submit</button>
+</div>

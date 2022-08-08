@@ -1,17 +1,16 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { tap } from 'rxjs/operators';
-import { TodoDialogComponent } from '../components/todo-dialog/todo-dialog.component';
-import { TodoChangeUserDto, TodoSumary, TodoUser } from './interfaces/todo.interface';
-import { AddUserDialogComponent } from '../components/add-user-dialog/add-user-dialog.component';
-import { TodoService } from '../services/todo.service';
-import { catchError, delay, fromEvent, map, Observable, ObservedValueOf, of, takeUntil } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { catchError, map, of } from 'rxjs';
 import { AddTodoDialogComponent } from '../components/add-todo-dialog/add-todo-dialog.component';
-import { UserService } from '../services/user.service';
+import { AddUserDialogComponent } from '../components/add-user-dialog/add-user-dialog.component';
+import { TodoDialogComponent } from '../components/todo-dialog/todo-dialog.component';
 import { NotificationService } from '../services/notification.service';
+import { TodoService } from '../services/todo.service';
+import { UserService } from '../services/user.service';
+import { TodoChangeUserDto, TodoSumary, TodoUser } from './interfaces/todo.interface';
 
 @Component({
   selector: 'app-todo',
@@ -65,7 +64,6 @@ export class TodoComponent implements OnInit {
 
   UpdateTodo(todoId: string, userId: string){
     const param = {
-      id: todoId,
       userId: userId
     } as TodoChangeUserDto
 
@@ -87,7 +85,7 @@ export class TodoComponent implements OnInit {
   deleteTodo(todoId: string){
     this._todoService.DeleteTodo(todoId)
     .pipe(
-      map( () => {
+      map(() => {
         this.RefreshDataTodo();
         this._notificationService.success({message: 'Todo has been successfully deleted'});
       }),

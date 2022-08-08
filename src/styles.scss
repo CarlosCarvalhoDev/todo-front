@@ -13,3 +13,17 @@ body {
 .form-field-container{
     width: 100%;
 }
+
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #661688;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #7b1fa2;
+    border-radius: 10px;
+}

@@ -1,6 +1,7 @@
-<h1>ADD USER DIALOG</h1>
-<form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
-  <div mat-dialog-content>
+<div mat-dialog-title>ADD USER DIALOG</div>
+
+<div mat-dialog-content>
+  <form [formGroup]="addUserForm">
     <mat-form-field class="form-field-container" appearance="outline">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name">
@@ -15,10 +16,10 @@
       <mat-label>Password</mat-label>
       <input matInput formControlName="password">
     </mat-form-field>  
-  </div>
+  </form>
+</div>
 
-  <div mat-dialog-actions>
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button color="accent" mat-button cdkFocusInitial type="submit">Submit</button>
-  </div>
-</form>
+<div mat-dialog-actions [align]="'end'">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button color="accent" mat-button cdkFocusInitial (click)="onSubmit()">Submit</button>
+</div>

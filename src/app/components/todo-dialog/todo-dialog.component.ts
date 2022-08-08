@@ -113,14 +113,10 @@ export class TodoDialogComponent{
 
   //CHAMA ROTA PRA ATUALIZAR O DADO DO TODO E TASKS.
   onSubmit(){
-    let todoId = this.todoForm.controls["id"].value;
-
-    const param = {
+    this._todoService.Update(this.todoForm.controls["id"].value, {
       title: this.todoForm.controls["title"].value,
       description: this.todoForm.controls["description"].value
-    } as UpdateTodoDTO
-
-    this._todoService.Update(todoId, param)
+    })
     .pipe(
       catchError((error: HttpErrorResponse) => {
         this._notificationService.error({message: error.message});
@@ -155,13 +151,11 @@ export class TodoDialogComponent{
       this._notificationService.message({message: 'Fill in all mandatory fields' })
       return;     
     }
-    
-    const taskData = {
+
+    this._taskService.CreateTask({
       todoId: todoId,
       taskTitle: this.taskForm.controls['title'].value
-    } as TaskDto
-
-    this._taskService.CreateTask(taskData)
+    })
       .pipe(
         map( () => { 
           this.refreshTodoDetailsData(this.todo.id);

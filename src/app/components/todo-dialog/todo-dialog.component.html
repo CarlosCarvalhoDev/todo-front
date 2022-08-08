@@ -1,8 +1,8 @@
 <div mat-dialog-title>
-  Todo: {{todo.title}}
+  Todo: 
 </div>
 
-<div mat-dialog-content [formGroup]="todoForm"  class="content">
+<div mat-dialog-content [formGroup]="todoForm" class="content">
   <div class="header-todo">
     <mat-form-field class="form-field-container"  [floatLabel]="getFloatLabelValue()">
       <mat-label>Title</mat-label>
@@ -53,6 +53,7 @@
   </div>
   
 </div>
+
 <div mat-dialog-actions [align]="'end'">
   <button mat-button mat-dialog-close (click)="onCancel()">Cancel</button>
   <button color="accent" mat-button cdkFocusInitial (click)="onSubmit()">Submit</button>

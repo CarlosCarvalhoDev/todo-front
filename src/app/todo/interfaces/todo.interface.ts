@@ -1,6 +1,6 @@
 import { TaskModel } from "./task.interface";
 
-export interface TodosUsersResponseViewModel {
+export interface TodoUser {
   userId: string;
   userName: string;
   todoList: TodoSumary[];
