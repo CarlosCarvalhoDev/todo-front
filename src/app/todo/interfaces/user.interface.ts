@@ -1,6 +1,7 @@
-export interface User {
+export interface UserResponseViewModel {
     id: string;
     name: string;
+    email: string;
 }
 
 export interface UserDto {

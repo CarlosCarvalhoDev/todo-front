@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { User, UserDto } from '../todo/interfaces/user.interface';
+import { UserResponseViewModel, UserDto } from '../todo/interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,22 +18,22 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  public GetUsers(): Observable<User[]>{
-    return this.http.get<User[]>(this.url)
+  public GetUsers(): Observable<UserResponseViewModel[]>{
+    return this.http.get<UserResponseViewModel[]>(this.url)
     .pipe(
       catchError(this.handleError)
     );
   }
 
-  public GetUserById(id: string): Observable<User>{
-    return this.http.get<User>(`${this.url}/${id}`)
+  public GetUserById(id: string): Observable<UserResponseViewModel>{
+    return this.http.get<UserResponseViewModel>(`${this.url}/${id}`)
     .pipe(
       catchError(this.handleError)
     );
   }
 
-  public CreateUser(user: UserDto): Observable<User> {
-    return this.http.post<User>(this.url, user, this.httpOptions)
+  public CreateUser(user: UserDto): Observable<UserResponseViewModel> {
+    return this.http.post<UserResponseViewModel>(this.url, user, this.httpOptions)
     .pipe(
       catchError(this.handleError)
     );
