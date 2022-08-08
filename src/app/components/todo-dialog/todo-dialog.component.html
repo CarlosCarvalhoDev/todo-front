@@ -1,93 +1,60 @@
 <div mat-dialog-title>
-  Todo:
+  Todo: {{todo.title}}
 </div>
 
 <div mat-dialog-content [formGroup]="todoForm"  class="content">
   <div class="header-todo">
     <mat-form-field class="form-field-container"  [floatLabel]="getFloatLabelValue()">
       <mat-label>Title</mat-label>
-      <input 
-        matInput
-        (ngModelChange)="this.todoForm.value.title" 
-        formControlName="title"
-        #title>
+      <input matInput formControlName="title">
     </mat-form-field> 
     
     <mat-form-field class="form-field-container"  [floatLabel]="getFloatLabelValue()">
       <mat-label>Description</mat-label>
-      <input 
-        matInput
-        (ngModelChange)="this.todoForm.value.description" 
-        formControlName="description"
-        #description>
+      <input matInput formControlName="description">
     </mat-form-field> 
   </div>
   
-  <div>
-    <div class="task-header">
-      <h3>Tasks:</h3>
-      <button 
-        matTooltip="New Task"
-        matTooltipPosition="left"
-        mat-icon-button
-        (click)="insertNewTask(taskTitle)">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-
-    <div [hidden]="!hideTaskField">
-      <form [formGroup]="taskForm">
-          <mat-form-field class="form-field-container" [floatLabel]="getFloatLabelValue()">
-          <mat-label>Task Title</mat-label>
-          <input
-            (blur)="resetTaskField()"
-            matInput
-            formControlName="title"
-            #taskTitle
-            >
-        </mat-form-field> 
-      </form>
-    </div>
-
-    <div class="group-tasks-checkbox" *ngIf="hasTasks()">
-      
-      <mat-label formArrayName="tasks" 
-        *ngFor="let task of tasksFormArray.controls; let i = index">
-      
-        <div class="task-checkbox">
-          
-          <mat-checkbox [formControlName]="i"
-            [checked]="todo.tasks[i].isCompleted"
-            [(ngModel)]="todo.tasks[i].isCompleted"
-            (mouseover)="onHoverTask(i)"
-            (mouseout)="deleteTaskOption = null"
-            (change)="onChangeTask(todo.tasks[i])"
-            #indexCheckBox>
-
-            <div class="task-row">
-              <span>
-                {{todo.tasks[i].name}}
-              </span>
-              
-              <div [hidden]="deleteTaskOption != i">
-                <button class="btn-chekebox-cancel" (click)="onClickDeleteTask(todo.tasks[i].id)" matSuffix mat-icon-button aria-label="Clear">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-              
-            </div>
-            
-          </mat-checkbox> 
-
-        </div>
-      </mat-label>
+  <div class="task-header">
+    <h3>Tasks:</h3>
+    <button matTooltip="New Task" matTooltipPosition="left" mat-icon-button (click)="insertNewTask(taskTitle)">
+      <mat-icon>add</mat-icon>
+    </button>
   </div>
+    
+  <form [formGroup]="taskForm" [hidden]="!hideTaskField">
+      <mat-form-field class="form-field-container" [floatLabel]="getFloatLabelValue()">
+      <mat-label>Task Title</mat-label>
+      <input matInput formControlName="title" (blur)="resetTaskField()" #taskTitle>
+    </mat-form-field> 
+  </form>
 
+  <div class="group-tasks-checkbox" *ngIf="hasTasks()">
+    <mat-label formArrayName="tasks" *ngFor="let task of tasksFormArray.controls; let i = index">
+      <div class="task-checkbox">
+        <mat-checkbox [formControlName]="i" [checked]="todo.tasks[i].isCompleted"
+          [(ngModel)]="todo.tasks[i].isCompleted"
+          (mouseover)="onHoverTask(i)"
+          (mouseout)="deleteTaskOption = null"
+          (change)="onChangeTask(todo.tasks[i])">
+
+          <div class="task-row">
+            <span>{{todo.tasks[i].name}}</span>
+            
+            <div [hidden]="deleteTaskOption != i">
+              <button class="btn-chekebox-cancel" matSuffix mat-icon-button (click)="onClickDeleteTask(todo.tasks[i].id)" aria-label="Clear">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-checkbox> 
+      </div>
+    </mat-label>
+  </div>
+  
 </div>
-
-</div>
-
 <div mat-dialog-actions [align]="'end'">
   <button mat-button mat-dialog-close (click)="onCancel()">Cancel</button>
   <button color="accent" mat-button cdkFocusInitial (click)="onSubmit()">Submit</button>
 </div>
+

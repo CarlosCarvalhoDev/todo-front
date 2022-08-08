@@ -3,8 +3,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError, map, of, pipe } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
+import { NotificationService } from 'src/app/services/notification.service';
 import { TodoService } from 'src/app/services/todo.service';
 import { TodoDto } from 'src/app/todo/interfaces/todo.interface';
 
@@ -19,12 +19,11 @@ export class AddTodoDialogComponent implements OnInit {
     @Inject(DIALOG_DATA) public data: string,
     private _formBuilder: FormBuilder, 
     private _todoService: TodoService, 
-    private _snackBar: MatSnackBar,
+    private _notificationService: NotificationService,
     public dialogRef: MatDialogRef<AddTodoDialogComponent>
   ){}
 
   addTodoForm: FormGroup = {} as FormGroup;
-  todoData: TodoDto = {} as TodoDto;
 
   ngOnInit(): void {
     this.initTodoForm();
@@ -41,36 +40,24 @@ export class AddTodoDialogComponent implements OnInit {
   onSubmit(){
     this.addTodoForm.controls["userId"].patchValue(this.data);
     if(!this.addTodoForm.valid){
-      this._snackBar.open(  'Existem campos obrigatórios nao preenchidos.', 'Close', {
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      });
+      this._notificationService.error({message: 'Fill in all mandatory fields'})
       return;     
     }
     const formValue = {
       ...this.addTodoForm.value as TodoDto
     }
-    this.todoData = formValue;
 
-    this._todoService.CreateTodo(this.todoData)
+    this._todoService.CreateTodo(formValue)
       .pipe(
         map( () => {
-          this.openSnackBar('Todo is Created');
+          this._notificationService.success({message: 'Todo was created successfully'});
           this.dialogRef.close(true);
         }),
         catchError((error: HttpErrorResponse) => {
-          this.openSnackBar(error.message)
+          this._notificationService.error({message: error.message});
           return of(0);
         })
       )
       .subscribe();
-    
-  }
-
-  openSnackBar(message: string) {
-    this._snackBar.open(  message, 'Close', {
-      horizontalPosition: 'right',
-      verticalPosition: 'bottom',
-    });
   }
 }
